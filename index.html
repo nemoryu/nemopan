@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>ベーカリー・ソレイユ | 毎日の食卓に、焼きたての太陽を</title>
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #4A3B32; margin: 0; background-color: #FAF6EE; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #4A3B32; margin: 0; background-color: #FAF6EE; overflow-x: hidden; }
         header { background-color: #FFFFFF; padding: 20px; text-align: center; border-bottom: 2px solid #E6D5C3; }
         h1 { margin: 0; color: #D28B47; font-size: 28px; margin-bottom: 15px; }
         
@@ -13,7 +13,7 @@
         nav > li { position: relative; margin: 0 15px; }
         nav a { color: #6E5B4F; text-decoration: none; font-weight: bold; display: block; padding: 5px 0; cursor: pointer; }
         
-        /* ★プルダウンメニューのスタイル★ */
+        /* プルダウンメニューのスタイル */
         .dropdown-menu {
             display: none; /* 初期状態は非表示 */
             position: absolute;
@@ -30,7 +30,7 @@
             border: 1px solid #E6D5C3;
         }
         
-        /* JavaScriptで「.open」というクラスがついた時だけ表示する */
+        /* JavaScriptで「.open」がついた時だけ表示 */
         .dropdown-menu.open {
             display: block;
         }
@@ -49,17 +49,57 @@
         .hero { background-color: #EAD7C3; padding: 60px 20px; text-align: center; }
         .hero h2 { font-size: 32px; margin-bottom: 10px; }
         .container { max-width: 960px; margin: 40px auto; padding: 0 20px; }
-        .news { background: #FFFFFF; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         footer { background-color: #4A3B32; color: #FFFFFF; text-align: center; padding: 20px; margin-top: 40px; }
         
-        /* 商品のデザイン */
+        /* 商品カードのデザイン */
         .products { background: #FFFFFF; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 30px; }
         .product-grid { display: flex; gap: 20px; margin-top: 20px; }
+        
+        /* ボタンにマウスを乗せたときの滑らかな変化（おまけ） */
         .product-card { flex: 1; border: 1px solid #E6D5C3; padding: 15px; border-radius: 6px; text-align: center; background: #FAF6EE; }
         .product-card h4 { margin: 10px 0 5px 0; color: #4A3B32; }
         .product-card p { margin: 0 0 15px 0; font-size: 14px; color: #6E5B4F; }
-        .product-card a { display: inline-block; background-color: #D28B47; color: white; padding: 8px 16px; text-align: center; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px; }
+        .product-card a { display: inline-block; background-color: #D28B47; color: white; padding: 8px 16px; text-align: center; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px; transition: background-color 0.3s; }
         .product-card a:hover { background-color: #B57233; }
+
+        /* ========================================================
+           ★追加：アニメーション用のCSS
+        ======================================================== */
+        /* 開いた瞬間にヘッダーロゴと文字をフワッと出す */
+        .hero h2, .hero p {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1.0s forwards;
+        }
+        .hero p {
+            animation-delay: 0.3s;
+        }
+
+        /* スクロールで現れる要素の初期状態（透明＋少し下へ） */
+        .news, .product-card {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        /* 画面内に入ったら発動するクラス */
+        .news.is-active, .product-card.is-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 2番目のカード（メロンパン）は少し遅れて現れる時間差設定 */
+        .product-grid .product-card:nth-child(2) {
+            transition-delay: 0.2s;
+        }
+
+        /* アニメーションの共通定義 */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -67,9 +107,8 @@
     <header>
         <h1>ベーカリー・ソレイユ</h1>
         <nav>
-            <li><a href="#home">ホーム</a></li>
+            <li><a href="index.html">ホーム</a></li>
             <li><a href="#about">こだわり</a></li>
-            <!-- ★hrefを「javascript:void(0);」に変えて、下へ勝手にスクロールするのを防ぎました★ -->
             <li>
                 <a id="dropdown-btn">商品情報 ▼</a>
                 <ul class="dropdown-menu" id="dropdown-menu">
@@ -89,7 +128,7 @@
     <div class="container">
         <!-- お知らせセクション -->
         <section class="news">
-            <h3>お知らせ</h3>
+            <h3 style="margin-top: 0;">お知らせ</h3>
             <ul>
                 <li>2026.06.23 - 夏季限定「レモンクリームパン」が新登場！</li>
                 <li>2026.06.10 - メディアで当店の「ザク旨カレーパン」が紹介されました。</li>
@@ -123,21 +162,37 @@
         <p>&copy; 2026 Bakery Soleil. All Rights Reserved.</p>
     </footer>
 
-    <!-- ★追加したJavaScript：クリックで開閉をコントロールします★ -->
+    <!-- ========================================================
+       ★追加：JavaScript（プルダウン制御 ＆ スクロール検知）
+    ======================================================== */ -->
     <script>
+        // 1. プルダウンメニューのクリック制御
         const dropdownBtn = document.getElementById('dropdown-btn');
         const dropdownMenu = document.getElementById('dropdown-menu');
 
-        // 商品情報がクリックされたときの動き
         dropdownBtn.addEventListener('click', function(event) {
-            event.stopPropagation(); // 画面全体クリックの判定を無効化する
-            dropdownMenu.classList.toggle('open'); // 「open」クラスをつけ外しする
+            event.stopPropagation(); 
+            dropdownMenu.classList.toggle('open'); 
         });
 
-        // メニュー以外の場所をクリックしたら自動で閉じる動き
         document.addEventListener('click', function() {
             dropdownMenu.classList.remove('open');
         });
+
+        // 2. スクロールに合わせて要素を浮かび上がらせる制御（Intersection Observer）
+        const observeElements = document.querySelectorAll('.news, .product-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-active'); 
+                }
+            });
+        }, {
+            threshold: 0.1 
+        });
+
+        observeElements.forEach(el => observer.observe(el));
     </script>
 
 </body>
