@@ -4,20 +4,53 @@
     <meta charset="UTF-8">
     <title>ザク旨自家製カレーパン | ベーカリー・ソレイユ</title>
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #4A3B32; margin: 0; background-color: #FAF6EE; }
-        .container { max-width: 800px; margin: 40px auto; padding: 20px; background: #FFF; border-radius: 8px; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #4A3B32; margin: 0; background-color: #FAF6EE; overflow-x: hidden; }
+        header { background-color: #FFFFFF; padding: 20px; text-align: center; border-bottom: 2px solid #E6D5C3; }
+        h1 { margin: 0; color: #D28B47; font-size: 28px; margin-bottom: 15px; }
+        
+        nav { display: flex; justify-content: center; align-items: center; list-style: none; padding: 0; margin: 0; }
+        nav > li { position: relative; margin: 0 15px; }
+        nav a { color: #6E5B4F; text-decoration: none; font-weight: bold; display: block; padding: 5px 0; cursor: pointer; }
+        
+        .btn-register-nav { background-color: #D28B47; color: #FFFFFF !important; padding: 6px 15px !important; border-radius: 4px; }
+
+        .dropdown-menu {
+            display: block; position: absolute; top: 100%; left: 50%; transform: translateX(-50%) scaleY(0); transform-origin: top center; opacity: 0; background-color: #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 4px; padding: 10px 0; min-width: 150px; z-index: 100; list-style: none; border: 1px solid #E6D5C3; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+        }
+        .dropdown-menu.open { transform: translateX(-50%) scaleY(1); opacity: 1; }
+        .dropdown-menu li a { padding: 8px 20px; font-size: 14px; font-weight: normal; text-align: left; }
+
+        .container { max-width: 800px; margin: 40px auto; padding: 20px; background: #FFF; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .product-flex { display: flex; gap: 40px; }
         .product-img { width: 50%; background: #EAD7C3; height: 300px; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 8px; }
         .product-info { width: 50%; }
         .price { font-size: 24px; color: #D28B47; font-weight: bold; margin: 10px 0; }
-        .btn-back { display: inline-block; margin-top: 20px; color: #6E5B4F; text-decoration: none; }
+        .btn-back { display: inline-block; margin-top: 20px; color: #6E5B4F; text-decoration: none; font-weight: bold; }
+        footer { background-color: #4A3B32; color: #FFFFFF; text-align: center; padding: 20px; margin-top: 40px; }
     </style>
 </head>
 <body>
 
+    <header>
+        <h1>ベーカリー・ソレイユ</h1>
+        <nav>
+            <!-- ★別ページからトップに戻すために「index.html」を頭につけます -->
+            <li><a href="index.html">ホーム</a></li>
+            <li><a href="index.html#about">こだわり</a></li>
+            <li>
+                <a id="dropdown-btn">商品情報 ▼</a>
+                <ul class="dropdown-menu" id="dropdown-menu">
+                    <li><a href="curry-bread.html">カレーパン</a></li>
+                    <li><a href="melon-bread.html">メロンパン</a></li>
+                </ul>
+            </li>
+            <li><a href="index.html#products">アクセス</a></li>
+            <li><a href="register.html" class="btn-register-nav">会員登録</a></li>
+        </nav>
+    </header>
+
     <div class="container">
         <div class="product-flex">
-            <!-- 画像ダミーエリア（実際は写真ファイルを指定） -->
             <div class="product-img">[ カレーパンの写真 ]</div>
             
             <div class="product-info">
@@ -35,6 +68,22 @@
         </div>
         <a href="index.html" class="btn-back">← トップページへ戻る</a>
     </div>
+
+    <footer>
+        <p>&copy; 2026 Bakery Soleil. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const dropdownBtn = document.getElementById('dropdown-btn');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        dropdownBtn.addEventListener('click', function(event) {
+            event.stopPropagation(); 
+            dropdownMenu.classList.toggle('open'); 
+        });
+        document.addEventListener('click', function() {
+            dropdownMenu.classList.remove('open');
+        });
+    </script>
 
 </body>
 </html>
