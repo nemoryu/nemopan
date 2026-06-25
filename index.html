@@ -13,7 +13,7 @@
         nav > li { position: relative; margin: 0 15px; }
         nav a { color: #6E5B4F; text-decoration: none; font-weight: bold; display: block; padding: 5px 0; cursor: pointer; }
         
-        /* ★追加：会員登録ボタン（目立つように枠と色を設定）★ */
+        /* 会員登録ボタン */
         .btn-register-nav {
             background-color: #D28B47;
             color: #FFFFFF !important;
@@ -61,12 +61,13 @@
             color: #D28B47;
         }
 
+        /* 各セクションの設定 */
         .hero { background-color: #EAD7C3; padding: 60px 20px; text-align: center; }
         .hero h2 { font-size: 32px; margin-bottom: 10px; }
         .container { max-width: 960px; margin: 40px auto; padding: 0 20px; }
-        footer { background-color: #4A3B32; color: #FFFFFF; text-align: center; padding: 20px; margin-top: 40px; }
         
-        /* 商品カードのデザイン */
+        .about-section { background: #FFFFFF; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 30px; }
+        .news { background: #FFFFFF; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 30px; }
         .products { background: #FFFFFF; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 30px; }
         .product-grid { display: flex; gap: 20px; margin-top: 20px; }
         
@@ -76,45 +77,39 @@
         .product-card a { display: inline-block; background-color: #D28B47; color: white; padding: 8px 16px; text-align: center; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px; transition: background-color 0.3s; }
         .product-card a:hover { background-color: #B57233; }
 
+        footer { background-color: #4A3B32; color: #FFFFFF; text-align: center; padding: 20px; margin-top: 40px; }
+
         /* スクロールアニメーション用のCSS */
         .hero h2, .hero p {
             opacity: 0;
             transform: translateY(20px);
             animation: fadeInUp 1.0s forwards;
         }
-        .hero p {
-            animation-delay: 0.3s;
-        }
+        .hero p { animation-delay: 0.3s; }
 
-        .news, .product-card {
+        .news, .about-section, .product-card {
             opacity: 0;
             transform: translateY(40px);
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
-        .news.is-active, .product-card.is-active {
+        .news.is-active, .about-section.is-active, .product-card.is-active {
             opacity: 1;
             transform: translateY(0);
         }
 
-        .product-grid .product-card:nth-child(2) {
-            transition-delay: 0.2s;
-        }
+        .product-grid .product-card:nth-child(2) { transition-delay: 0.2s; }
 
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <header>
+    <header id="home">
         <h1>ベーカリー・ソレイユ</h1>
         <nav>
-            <li><a href="index.html">ホーム</a></li>
+            <!-- ★修正：トップページ内なので移動用の「#」リンクに変更 -->
+            <li><a href="#home">ホーム</a></li>
             <li><a href="#about">こだわり</a></li>
             <li>
                 <a id="dropdown-btn">商品情報 ▼</a>
@@ -123,8 +118,7 @@
                     <li><a href="melon-bread.html">メロンパン</a></li>
                 </ul>
             </li>
-            <li><a href="#access">アクセス</a></li>
-            <!-- ★追加：会員登録ページ（register.html）へのボタン形式リンク★ -->
+            <li><a href="#products">アクセス</a></li>
             <li><a href="register.html" class="btn-register-nav">会員登録</a></li>
         </nav>
     </header>
@@ -144,6 +138,12 @@
             </ul>
         </section>
 
+        <!-- ★新設：こだわりセクション（メニューのリンク先に対応） -->
+        <section class="about-section" id="about">
+            <h3 style="margin-top: 0;">当店のこだわり</h3>
+            <p>ベーカリー・ソレイユのパンは、毎日職人が粉から生地を仕込み、店内の大きなオーブンで焼き上げています。外はカリッと、中はもっちりとした極上の食感をお楽しみください。</p>
+        </section>
+
         <!-- 商品情報セクション -->
         <section class="products" id="products">
             <h3>自慢のパン</h3>
@@ -153,6 +153,7 @@
                 <div class="product-card">
                     <h4>ザク旨自家製カレーパン</h4>
                     <p>外はザクザク、中はとろ〜り牛すじカレー</p>
+                    <!-- ★ここにジャンプするためのリンク先ファイルが設定されています -->
                     <a href="curry-bread.html">詳しく見る</a>
                 </div>
                 
@@ -186,7 +187,7 @@
         });
 
         // 2. スクロールに合わせて要素を浮かび上がらせる制御
-        const observeElements = document.querySelectorAll('.news, .product-card');
+        const observeElements = document.querySelectorAll('.news, .about-section, .product-card');
         
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
