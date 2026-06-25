@@ -2,39 +2,204 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ザク旨自家製カレーパン | ベーカリー・ソレイユ</title>
+    <title>ベーカリー・ソレイユ | 毎日の食卓に、焼きたての太陽を</title>
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #4A3B32; margin: 0; background-color: #FAF6EE; }
-        .container { max-width: 800px; margin: 40px auto; padding: 20px; background: #FFF; border-radius: 8px; }
-        .product-flex { display: flex; gap: 40px; }
-        .product-img { width: 50%; background: #EAD7C3; height: 300px; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 8px; }
-        .product-info { width: 50%; }
-        .price { font-size: 24px; color: #D28B47; font-weight: bold; margin: 10px 0; }
-        .btn-back { display: inline-block; margin-top: 20px; color: #6E5B4F; text-decoration: none; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #4A3B32; margin: 0; background-color: #FAF6EE; overflow-x: hidden; }
+        header { background-color: #FFFFFF; padding: 20px; text-align: center; border-bottom: 2px solid #E6D5C3; }
+        h1 { margin: 0; color: #D28B47; font-size: 28px; margin-bottom: 15px; }
+        
+        /* ナビゲーション全体の調整 */
+        nav { display: flex; justify-content: center; align-items: center; list-style: none; padding: 0; margin: 0; }
+        nav > li { position: relative; margin: 0 15px; }
+        nav a { color: #6E5B4F; text-decoration: none; font-weight: bold; display: block; padding: 5px 0; cursor: pointer; }
+        
+        /* ★追加：会員登録ボタン（目立つように枠と色を設定）★ */
+        .btn-register-nav {
+            background-color: #D28B47;
+            color: #FFFFFF !important;
+            padding: 6px 15px !important;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .btn-register-nav:hover {
+            background-color: #B57233;
+        }
+
+        /* するっと滑り落ちるプルダウンメニューのスタイル */
+        .dropdown-menu {
+            display: block; 
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) scaleY(0); 
+            transform-origin: top center; 
+            opacity: 0; 
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            padding: 10px 0;
+            min-width: 150px;
+            z-index: 100;
+            list-style: none;
+            border: 1px solid #E6D5C3;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+        }
+        
+        .dropdown-menu.open {
+            transform: translateX(-50%) scaleY(1);
+            opacity: 1;
+        }
+
+        .dropdown-menu li a {
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: normal;
+            text-align: left;
+        }
+        .dropdown-menu li a:hover {
+            background-color: #FAF6EE;
+            color: #D28B47;
+        }
+
+        .hero { background-color: #EAD7C3; padding: 60px 20px; text-align: center; }
+        .hero h2 { font-size: 32px; margin-bottom: 10px; }
+        .container { max-width: 960px; margin: 40px auto; padding: 0 20px; }
+        footer { background-color: #4A3B32; color: #FFFFFF; text-align: center; padding: 20px; margin-top: 40px; }
+        
+        /* 商品カードのデザイン */
+        .products { background: #FFFFFF; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-top: 30px; }
+        .product-grid { display: flex; gap: 20px; margin-top: 20px; }
+        
+        .product-card { flex: 1; border: 1px solid #E6D5C3; padding: 15px; border-radius: 6px; text-align: center; background: #FAF6EE; }
+        .product-card h4 { margin: 10px 0 5px 0; color: #4A3B32; }
+        .product-card p { margin: 0 0 15px 0; font-size: 14px; color: #6E5B4F; }
+        .product-card a { display: inline-block; background-color: #D28B47; color: white; padding: 8px 16px; text-align: center; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px; transition: background-color 0.3s; }
+        .product-card a:hover { background-color: #B57233; }
+
+        /* スクロールアニメーション用のCSS */
+        .hero h2, .hero p {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1.0s forwards;
+        }
+        .hero p {
+            animation-delay: 0.3s;
+        }
+
+        .news, .product-card {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .news.is-active, .product-card.is-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .product-grid .product-card:nth-child(2) {
+            transition-delay: 0.2s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
 
+    <header>
+        <h1>ベーカリー・ソレイユ</h1>
+        <nav>
+            <li><a href="index.html">ホーム</a></li>
+            <li><a href="#about">こだわり</a></li>
+            <li>
+                <a id="dropdown-btn">商品情報 ▼</a>
+                <ul class="dropdown-menu" id="dropdown-menu">
+                    <li><a href="curry-bread.html">カレーパン</a></li>
+                    <li><a href="melon-bread.html">メロンパン</a></li>
+                </ul>
+            </li>
+            <li><a href="#access">アクセス</a></li>
+            <!-- ★追加：会員登録ページ（register.html）へのボタン形式リンク★ -->
+            <li><a href="register.html" class="btn-register-nav">会員登録</a></li>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2>毎日の食卓に、焼きたての太陽を。</h2>
+        <p>厳選した国産小麦と、自家製酵母でじっくり育てた自慢のパンをお届けします。</p>
+    </section>
+
     <div class="container">
-        <div class="product-flex">
-            <!-- 画像ダミーエリア（実際は写真ファイルを指定） -->
-            <div class="product-img">[ カレーパンの写真 ]</div>
-            
-            <div class="product-info">
-                <h2>ザク旨自家製カレーパン</h2>
-                <p class="price">¥280 (税込)</p>
-                <p><strong>外はザクザク、中はとろ〜り！</strong></p>
-                <p>スパイスからこだわった自家製の牛すじカレーを、もっちりとした生地で包み込みました。粗目の自家製パン粉を使用し、冷めてもザクザクとした食感が楽しめます。当店不動の人気No.1商品です。</p>
+        <!-- お知らせセクション -->
+        <section class="news">
+            <h3 style="margin-top: 0;">お知らせ</h3>
+            <ul>
+                <li>2026.06.23 - 夏季限定「レモンクリームパン」が新登場！</li>
+                <li>2026.06.10 - メディアで当店の「ザク旨カレーパン」が紹介されました。</li>
+            </ul>
+        </section>
+
+        <!-- 商品情報セクション -->
+        <section class="products" id="products">
+            <h3>自慢のパン</h3>
+            <div class="product-grid">
                 
-                <h4>アレルギー情報</h4>
-                <p>小麦・乳・卵・牛肉・りんご</p>
+                <!-- カレーパンのカード -->
+                <div class="product-card">
+                    <h4>ザク旨自家製カレーパン</h4>
+                    <p>外はザクザク、中はとろ〜り牛すじカレー</p>
+                    <a href="curry-bread.html">詳しく見る</a>
+                </div>
                 
-                <h4>焼き上がり時間（目安）</h4>
-                <p>毎日：7:00 / 11:30 / 15:00</p>
+                <!-- メロンパンのカード -->
+                <div class="product-card">
+                    <h4>芳醇バターのサクふわメロンパン</h4>
+                    <p>発酵バター香る、究極のサクふわ食感</p>
+                    <a href="melon-bread.html">詳しく見る</a>
+                </div>
+                
             </div>
-        </div>
-        <a href="index.html" class="btn-back">← トップページへ戻る</a>
+        </section>
     </div>
+
+    <footer>
+        <p>&copy; 2026 Bakery Soleil. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // 1. プルダウンメニューのクリック制御
+        const dropdownBtn = document.getElementById('dropdown-btn');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+
+        dropdownBtn.addEventListener('click', function(event) {
+            event.stopPropagation(); 
+            dropdownMenu.classList.toggle('open'); 
+        });
+
+        document.addEventListener('click', function() {
+            dropdownMenu.classList.remove('open');
+        });
+
+        // 2. スクロールに合わせて要素を浮かび上がらせる制御
+        const observeElements = document.querySelectorAll('.news, .product-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-active'); 
+                }
+            });
+        }, {
+            threshold: 0.1 
+        });
+
+        observeElements.forEach(el => observer.observe(el));
+    </script>
 
 </body>
 </html>
