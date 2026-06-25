@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>新規会員登録 | ベーカリー・ソレイユ</title>
-    <!-- Supabaseと通信するための公式スクリプト -->
-    <script src="https://jsdelivr.net"></script>
+    
+    <!-- ★Firebaseの機能を読み込むための公式スクリプト（CDN版） -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
     
     <style>
         body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #4A3B32; margin: 0; background-color: #FAF6EE; }
@@ -45,18 +47,25 @@
 
         <a href="index.html" class="btn-back">← トップページへ戻る</a>
     </div>
+        <script>
+        // ★いただいたFirebaseの専用情報をそのままセットしました★
+        const firebaseConfig = {
+            apiKey: "AIzaSyBTF777mllct0E7J_tmyNWvHyEfvlgxVSc",
+            authDomain: "://firebaseapp.com",
+            projectId: "nemopan-test",
+            storageBucket: "nemopan-test.firebasestorage.app",
+            messagingSenderId: "806690640085",
+            appId: "1:806690640085:web:6a21e0f0e610e67f28d25c",
+            measurementId: "G-X6Q44DCWJ6"
+        };
 
-    <script>
-        // ★いただいたURLとAPIキーを反映させました★
-        const SUPABASE_URL = "https://ishffwtplouubnlydzih.supabase.co"; 
-        const SUPABASE_ANON_KEY = "sb_publishable_UybqxmICCDiJXOpy2YN5hg_KkWNYwNL"; 
+        // Firebaseの初期化
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
-        // Supabaseクライアントの初期化
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // フォーム送信時の処理
-        document.getElementById('register-form').addEventListener('submit', async function(event) {
-            event.preventDefault(); 
+        // フォームが送信されたときの会員登録処理
+        document.getElementById('register-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // 画面のリロードを防ぐ
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
@@ -64,25 +73,24 @@
             
             msgBox.style.display = "none";
 
-            // Supabase Authenticationの会員登録機能を発動
-            const { data, error } = await supabase.auth.signUp({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                msgBox.className = "message error";
-                msgBox.innerText = "登録エラー: " + error.message;
-                msgBox.style.display = "block";
-            } else {
-                msgBox.className = "message success";
-                msgBox.innerText = "会員登録が完了しました！入力したメールアドレスの受信トレイを確認してください。";
-                msgBox.style.display = "block";
-                
-                // 入力欄のクリア
-                document.getElementById('email').value = "";
-                document.getElementById('password').value = "";
-            }
+            // Firebaseの機能でユーザーを新規作成
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // 登録成功時
+                    msgBox.className = "message success";
+                    msgBox.innerText = "会員登録が正常に完了しました！";
+                    msgBox.style.display = "block";
+                    
+                    // 入力欄をきれいにクリア
+                    document.getElementById('email').value = "";
+                    document.getElementById('password').value = "";
+                })
+                .catch((error) => {
+                    // エラー発生時（パスワードが短い、メールが登録済など）
+                    msgBox.className = "message error";
+                    msgBox.innerText = "登録エラー: " + error.message;
+                    msgBox.style.display = "block";
+                });
         });
     </script>
 
